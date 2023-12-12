@@ -3,6 +3,7 @@ import { subDays } from "date-fns";
 import { useSearchParams } from "react-router-dom";
 import { getBookingsAfterDate } from "../../services/apiBookings";
 
+// Tao custom hook de lay du lieu bang Booking tu supabase
 export function useRecentBookings() {
 	const [searchParams] = useSearchParams();
 

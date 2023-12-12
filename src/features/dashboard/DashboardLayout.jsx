@@ -15,6 +15,7 @@ const StyledDashboardLayout = styled.div`
 	gap: 2.4rem;
 `;
 
+// Tao component DashboardLayout de dung cho cac component khac
 function DashboardLayout() {
 	const { bookings, isLoading: isLoading1 } = useRecentBookings();
 	const { isLoading: isLoading2, confirmedStays, numDays } = useRecentStays();

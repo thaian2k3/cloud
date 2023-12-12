@@ -22,7 +22,6 @@ const Icon = styled.div`
   align-items: center;
   justify-content: center;
 
-  /* Make these dynamic, based on the received prop */
   background-color: var(--color-${(props) => props.color}-100);
 
   & svg {
@@ -47,6 +46,7 @@ const Value = styled.p`
   font-weight: 500;
 `;
 
+// Tao component Stat de dung cho cac component khac
 function Stat({ icon, title, value, color }) {
   return (
     <StyledStat>

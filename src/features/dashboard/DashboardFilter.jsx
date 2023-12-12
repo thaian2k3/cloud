@@ -1,4 +1,6 @@
 import Filter from "./../../ui/Filter";
+
+// Tao trang DashboardFilter
 function DashboardFilter() {
 	return (
 		<Filter

@@ -27,6 +27,7 @@ const Box = styled.div`
 	}
 `;
 
+// Tao trang PageNotFound de catch loi 
 function PageNotFound() {
 	const moveBack = useMoveBack();
 

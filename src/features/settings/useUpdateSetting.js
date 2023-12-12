@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { updateSetting as updateSettingApi } from "../../services/apiSettings";
 
+// Tao custom hook de sua Setting
 export function useUpdateSetting() {
 	const queryClient = useQueryClient();
 

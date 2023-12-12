@@ -16,7 +16,8 @@ export async function createEditCabin(newCabin, id) {
 		"/",
 		""
 	);
-
+	
+	// Tao duong dan image
 	const imagePath = hasImagePath
 		? newCabin.image
 		: `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
@@ -24,10 +25,10 @@ export async function createEditCabin(newCabin, id) {
 	//1. Create/edit cabin
 	let query = supabase.from("cabins");
 
-	//A) CREATE
+	//A) TAO
 	if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
 
-	//B) EDIT
+	//B) SUA
 	if (id)
 		query = query.update({ ...newCabin, image: imagePath }).eq("id", id);
 	const { data, error } = await query.select().single();
@@ -37,13 +38,13 @@ export async function createEditCabin(newCabin, id) {
 		throw new Error("Cabins cound not be created");
 	}
 
-	//2. Upload image
+	//2. TAI ANH LEN
 	if (hasImagePath) return data;
 	const { error: storageError } = await supabase.storage
 		.from("cabin-images")
 		.upload(imageName, newCabin.image);
 
-	//3. Delete the cabin if there was an error uploading image
+	//3. XOA DI CABIN NEU NHU ANH KHONG TAI LEN DUOC
 	if (storageError) {
 		await supabase.from("cabins").delete().eq("id", data.id);
 		console.error(storageError);

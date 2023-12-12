@@ -7,8 +7,9 @@ import {
 	HiOutlineChartBar,
 } from "react-icons/hi2";
 
+// Tao component Stats de dung cho component Dashboard
 function Stats({ bookings, confirmedStays, cabinCount, numDays }) {
-	//# 1.
+	//# 1. 
 	const numbBookings = bookings.length;
 
 	//# 2.

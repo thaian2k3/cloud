@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+// Tao custom hook de luu tru du lieu vao localStorage
 export function useLocalStorageState(initialState, key) {
   const [value, setValue] = useState(function () {
     const storedValue = localStorage.getItem(key);

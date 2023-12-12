@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 
+// Tao custom hook de xu ly click ngoai element
 export function useOutsideClick(handler, listenCapturing = true) {
 	const ref = useRef();
 

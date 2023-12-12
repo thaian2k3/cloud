@@ -1,6 +1,7 @@
 import SignupForm from "../features/authentication/SignupForm";
 import Heading from "../ui/Heading";
 
+// Tao trang NewUsers
 function NewUsers() {
 	return (
 		<>

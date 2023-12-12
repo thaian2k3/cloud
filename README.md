@@ -1,3 +1,3 @@
-# The Wild Oasis
+# Build website quan li khach san
 
-Main project in Thai An's Ultimate React Course. Built with React Query and Supabase.
+Deploy web tren Google app cloud, ket hop voi supabase

@@ -1,5 +1,6 @@
 import styled from "styled-components";
 
+// Tao component DashboardBox de dung cho cac component khac
 const DashboardBox = styled.div`
   /* Box */
   background-color: var(--color-grey-0);

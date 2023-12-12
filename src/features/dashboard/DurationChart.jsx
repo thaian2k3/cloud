@@ -115,14 +115,14 @@ const startDataDark = [
 ];
 
 function prepareData(startData, stays) {
-	// A bit ugly code, but sometimes this is what it takes when working with real data 😅
 
+	// Tang gia tri cua mot phan tu trong mang
 	function incArrayValue(arr, field) {
 		return arr.map((obj) =>
 			obj.duration === field ? { ...obj, value: obj.value + 1 } : obj
 		);
 	}
-
+	// Tao du lieu cho bieu do
 	const data = stays
 		.reduce((arr, cur) => {
 			const num = cur.numNights;
@@ -142,6 +142,7 @@ function prepareData(startData, stays) {
 	return data;
 }
 
+// Tao component DurationChart de hien thi bieu do
 function DurationChart({ confirmedStays }) {
 	const { isDarkMode } = useDarkMode();
 	const startData = isDarkMode ? startDataDark : startDataLight;

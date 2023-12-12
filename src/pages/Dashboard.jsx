@@ -3,6 +3,7 @@ import Heading from "../ui/Heading";
 import Row from "../ui/Row";
 import DashboardFilter from "./../features/dashboard/DashboardFilter";
 
+// Tao trang Dashboard
 function Dashboard() {
 	return (
 		<>

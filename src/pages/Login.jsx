@@ -13,6 +13,7 @@ const LoginLayout = styled.main`
 	background-color: var(--color-grey-50);
 `;
 
+//Tao trang login
 function Login() {
 	return (
 		<LoginLayout>
