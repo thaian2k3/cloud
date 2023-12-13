@@ -1,6 +1,6 @@
-import { styled } from "styled-components";
+import styled from "styled-components";
 
-const Input = styled.input`
+const Option = styled.option`
 	border: 1px solid var(--color-grey-300);
 	background-color: var(--color-grey-0);
 	border-radius: var(--border-radius-sm);
@@ -15,4 +15,4 @@ const Input = styled.input`
 	}
 `;
 
-export default Input
+export default Option;

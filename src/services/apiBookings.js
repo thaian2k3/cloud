@@ -69,7 +69,7 @@ export async function getBookingsAfterDate(date) {
 }
 
 // Returns all STAYS that are were created after the given date
-// Tra ve tat ca STAYS ma duoc tao ra vao ngay cu the. 
+// Tra ve tat ca STAYS ma duoc tao ra vao ngay cu the.
 export async function getStaysAfterDate(date) {
 	const { data, error } = await supabase
 		.from("bookings")
@@ -127,6 +127,19 @@ export async function deleteBooking(id) {
 	if (error) {
 		console.error(error);
 		throw new Error("Booking could not be deleted");
+	}
+	return data;
+}
+
+export async function createEditBooking(bookingData) {
+	const { data, error } = await supabase
+		.from("bookings")
+		.upsert(bookingData)
+		.select();
+
+	if (error) {
+		console.error(error);
+		throw new Error("Booking could not be created or edited");
 	}
 	return data;
 }

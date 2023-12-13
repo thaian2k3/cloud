@@ -22,6 +22,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
 	const isWorking = isCreating || isEditing;
 
 	function onSubmit(data) {
+		console.log(data);
 		const image =
 			typeof data.image === "string" ? data.image : data.image[0];
 		if (isEditSession)
@@ -96,7 +97,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
 						required: "This field is required",
 						min: {
 							value: 1,
-							message: "Capacity should be at least 1",
+							message: "Regular price should be at least 1",
 						},
 					})}
 				/>
