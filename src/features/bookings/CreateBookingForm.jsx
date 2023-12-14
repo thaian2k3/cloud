@@ -5,14 +5,17 @@ import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 import Textarea from "../../ui/Textarea";
 import Button from "../../ui/Button";
+import Spinner from "../../ui/Spinner";
 import supabase from "../../services/supabase";
 import { isBefore, isFuture, isPast, isToday, parseISO } from "date-fns";
-import { subtractDates } from "../../utils/helpers";
+import { getCountryCode, subtractDates } from "../../utils/helpers";
 import { useCabins } from "../cabins/useCabins";
 import Checkbox from "../../ui/Checkbox";
 import Option from "../../ui/Option";
-import Select from "../../ui/Select";
 import SelectNoProps from "../../ui/SelectNoProps";
+import { useCreateGuest } from "../guests/useCreateGuest";
+import { useEditGuest } from "../guests/useEditGuest";
+import { useCountriesName } from "./useCountriesName";
 
 function CreateBookingForm({ onCloseModal }) {
 	const {
@@ -23,57 +26,90 @@ function CreateBookingForm({ onCloseModal }) {
 		formState: { errors },
 	} = useForm();
 	const { isCreating, createBooking } = useCreateBooking();
+	const { createGuest } = useCreateGuest();
+	const { editGuest } = useEditGuest();
 	const { cabins, loading: loadingCabins } = useCabins();
+	const { countriesName, loading: loadingCountriesName } = useCountriesName();
 
-	async function onSubmit(booking) {
-		const { data: guestsIds } = await supabase
+	if (loadingCabins || loadingCountriesName) return <Spinner />;
+
+	console.log(countriesName);
+
+	async function onSubmit(data) {
+		const guestData = {
+			email: data.email,
+			nationalId: data.nationalId,
+			fullName: data.fullName,
+			countryFlag: `https://flagcdn.com/${await getCountryCode(
+				data.nationality
+			)}.svg`,
+			nationality: data.nationality,
+		};
+
+		//Lay data guest
+		let { data: guest } = await supabase
 			.from("guests")
-			.select("id")
-			.order("id");
-		const allGuestIds = guestsIds.map((guest) => guest.id);
+			.select("*")
+			.eq("email", data.email)
+			.single();
 
+		if (guest) {
+			editGuest({
+				newGuestData: guestData,
+				id: guest.id,
+			});
+		} else {
+			createGuest(guestData);
+		}
+		let { data: lastedGuest } = await supabase
+			.from("guests")
+			.select("*")
+			.eq("email", data.email)
+			.single();
+		const lastedGuestId = lastedGuest?.id;
+
+		// Lay data cabin
 		const { data: cabin } = await supabase
 			.from("cabins")
 			.select("*")
-			.eq("id", booking.cabinId);
+			.eq("id", data.cabinId);
 
-		// Calculate the total price and status of the booking
-		const numNights = subtractDates(booking.endDate, booking.startDate);
+
+		const numNights = subtractDates(data.endDate, data.startDate);
 		const cabinPrice =
 			numNights * (cabin[0].regularPrice - cabin[0].discount);
-		const extrasPrice = booking.hasBreakfast
-			? numNights * 15 * booking.numGuests
-			: 0; // hardcoded breakfast price
+		const extrasPrice = data.hasBreakfast
+			? numNights * 15 * data.numGuests
+			: 0; 
 		const totalPrice = cabinPrice + extrasPrice;
 
 		let status;
-		if (
-			isPast(new Date(booking.endDate)) &&
-			!isToday(new Date(booking.endDate))
-		)
+		if (isPast(new Date(data.endDate)) && !isToday(new Date(data.endDate)))
 			status = "checked-out";
 		if (
-			isFuture(new Date(booking.startDate)) ||
-			isToday(new Date(booking.startDate))
+			isFuture(new Date(data.startDate)) ||
+			isToday(new Date(data.startDate))
 		)
 			status = "unconfirmed";
 		if (
-			(isFuture(new Date(booking.endDate)) ||
-				isToday(new Date(booking.endDate))) &&
-			isPast(new Date(booking.startDate))
+			(isFuture(new Date(data.endDate)) ||
+				isToday(new Date(data.endDate))) &&
+			isPast(new Date(data.startDate))
 		)
 			status = "checked-in";
 
-		console.log(booking.guestId - 1, allGuestIds.at(booking.guestId - 1));
 		createBooking(
 			{
-				...booking,
+				startDate: data.startDate,
+				endDate: data.endDate,
+				numGuests: data.numGuests,
+				hasBreakfast: data.hasBreakfast,
 				numNights,
 				cabinPrice,
 				extrasPrice,
 				totalPrice,
-				guestId: booking.guestId,
-				cabinId: booking.cabinId,
+				guestId: lastedGuestId,
+				cabinId: data.cabinId,
 				status,
 			},
 			{
@@ -90,6 +126,61 @@ function CreateBookingForm({ onCloseModal }) {
 			onSubmit={handleSubmit(onSubmit)}
 			type={onCloseModal ? "modal" : "regular"}
 		>
+			<FormRow label="Guest name" error={errors?.fullName?.message}>
+				<Input
+					type="text"
+					id="fullName"
+					disabled={isCreating}
+					{...register("fullName", {
+						required: "Guest name is required",
+					})}
+				/>
+			</FormRow>
+
+			<FormRow label="Guest email" error={errors?.email?.message}>
+				<Input
+					type="email"
+					id="email"
+					disabled={isCreating}
+					{...register("email", {
+						required: "Guest email is required",
+					})}
+				/>
+			</FormRow>
+
+			<FormRow
+				label="Guest national ID"
+				error={errors?.nationalId?.message}
+			>
+				<Input
+					type="text"
+					id="nationalId"
+					disabled={isCreating}
+					{...register("nationalId", {
+						required: "Guest national ID is required",
+					})}
+				/>
+			</FormRow>
+
+			<FormRow
+				label="Guest nationality"
+				error={errors?.nationality?.message}
+			>
+				<SelectNoProps
+					id="nationality"
+					disabled={loadingCountriesName || isCreating}
+					{...register("nationality", {
+						required: "Guest nationality is required",
+					})}
+				>
+					{countriesName.map((countryName) => (
+						<Option value={countryName} key={countryName}>
+							{countryName}
+						</Option>
+					))}
+				</SelectNoProps>
+			</FormRow>
+
 			<FormRow label="Start date" error={errors?.startDate?.message}>
 				<Input
 					type="date"
@@ -149,17 +240,6 @@ function CreateBookingForm({ onCloseModal }) {
 					disabled={isCreating}
 					{...register("hasBreakfast")}
 				></Checkbox>
-			</FormRow>
-
-			<FormRow label="Guest ID" error={errors?.name?.message}>
-				<Input
-					type="number"
-					id="guestId"
-					disabled={isCreating}
-					{...register("guestId", {
-						required: "Guest ID is required",
-					})}
-				/>
 			</FormRow>
 
 			<FormRow label="Cabin ID" error={errors?.cabinId?.message}>
