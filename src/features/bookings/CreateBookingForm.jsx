@@ -10,7 +10,6 @@ import supabase from "../../services/supabase";
 import { isBefore, isFuture, isPast, isToday, parseISO } from "date-fns";
 import { getCountryCode, subtractDates } from "../../utils/helpers";
 import { useCabins } from "../cabins/useCabins";
-import Checkbox from "../../ui/Checkbox";
 import Option from "../../ui/Option";
 import SelectNoProps from "../../ui/SelectNoProps";
 import { useCreateGuest } from "../guests/useCreateGuest";
