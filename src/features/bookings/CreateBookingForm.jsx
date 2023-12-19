@@ -66,7 +66,9 @@ function CreateBookingForm({ onCloseModal }) {
 			.select("*")
 			.eq("email", data.email)
 			.single();
-		const lastedGuestId = lastedGuest?.id;
+
+		console.log(lastedGuest);
+		const lastedGuestId = lastedGuest.id;
 
 		// Lay data cabin
 		const { data: cabin } = await supabase
@@ -74,13 +76,12 @@ function CreateBookingForm({ onCloseModal }) {
 			.select("*")
 			.eq("id", data.cabinId);
 
-
 		const numNights = subtractDates(data.endDate, data.startDate);
 		const cabinPrice =
 			numNights * (cabin[0].regularPrice - cabin[0].discount);
 		const extrasPrice = data.hasBreakfast
 			? numNights * 15 * data.numGuests
-			: 0; 
+			: 0;
 		const totalPrice = cabinPrice + extrasPrice;
 
 		let status;
@@ -173,7 +174,7 @@ function CreateBookingForm({ onCloseModal }) {
 						required: "Guest nationality is required",
 					})}
 				>
-					{countriesName.map((countryName) => (
+					{countriesName?.map((countryName) => (
 						<Option value={countryName} key={countryName}>
 							{countryName}
 						</Option>
@@ -229,17 +230,18 @@ function CreateBookingForm({ onCloseModal }) {
 				label="Has breakfast"
 				error={errors?.hasBreakfast?.message}
 			>
-				{/* <Input
+				<Input
 					type="checkbox"
 					id="hasBreakfast"
 					disabled={isCreating}
 					{...register("hasBreakfast")}
-				/> */}
-				<Checkbox
+				/>
+				{/* <Checkbox
 					id="hasBreakfast"
 					disabled={isCreating}
+					checked={true}
 					{...register("hasBreakfast")}
-				></Checkbox>
+				></Checkbox> */}
 			</FormRow>
 
 			<FormRow label="Cabin ID" error={errors?.cabinId?.message}>
