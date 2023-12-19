@@ -11,12 +11,7 @@ import {
 	YAxis,
 } from "recharts";
 import { useDarkMode } from "../../context/DarkModeContext";
-import {
-	eachDayOfInterval,
-	format,
-	isSameDay,
-	subDays,
-} from "date-fns";
+import { eachDayOfInterval, format, isSameDay, subDays } from "date-fns";
 
 const StyledSalesChart = styled(DashboardBox)`
 	grid-column: 1 / -1;
@@ -81,7 +76,7 @@ function SalesChart({ bookings, numDays }) {
 						tickLine={{ stroke: colors.text }}
 					/>
 					<YAxis
-						unit="$"
+						unit="đ"
 						tick={{ fill: colors.text }}
 						tickLine={{ stroke: colors.text }}
 					/>
@@ -96,7 +91,7 @@ function SalesChart({ bookings, numDays }) {
 						fill={colors.totalSales.fill}
 						strokeWidth={2}
 						name="Total sales"
-						unit="$"
+						unit="đ"
 					/>
 					<Area
 						dataKey="extrasSales"
@@ -105,7 +100,7 @@ function SalesChart({ bookings, numDays }) {
 						fill={colors.extrasSales.fill}
 						strokeWidth={2}
 						name="Extras sales"
-						unit="$"
+						unit="đ"
 					/>
 				</AreaChart>
 			</ResponsiveContainer>
