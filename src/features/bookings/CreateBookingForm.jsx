@@ -10,7 +10,6 @@ import supabase from "../../services/supabase";
 import { isBefore, isFuture, isPast, isToday, parseISO } from "date-fns";
 import { getCountryCode, subtractDates } from "../../utils/helpers";
 import { useCabins } from "../cabins/useCabins";
-import Checkbox from "../../ui/Checkbox";
 import Option from "../../ui/Option";
 import SelectNoProps from "../../ui/SelectNoProps";
 import { useCreateGuest } from "../guests/useCreateGuest";
@@ -65,7 +64,9 @@ function CreateBookingForm({ onCloseModal }) {
 			.select("*")
 			.eq("email", data.email)
 			.single();
-		const lastedGuestId = lastedGuest?.id;
+
+		console.log(lastedGuest);
+		const lastedGuestId = lastedGuest.id;
 
 		// Lay data cabin
 		const { data: cabin } = await supabase
@@ -171,7 +172,7 @@ function CreateBookingForm({ onCloseModal }) {
 						required: "Guest nationality is required",
 					})}
 				>
-					{countriesName.map((countryName) => (
+					{countriesName?.map((countryName) => (
 						<Option value={countryName} key={countryName}>
 							{countryName}
 						</Option>
@@ -227,17 +228,18 @@ function CreateBookingForm({ onCloseModal }) {
 				label="Has breakfast"
 				error={errors?.hasBreakfast?.message}
 			>
-				{/* <Input
+				<Input
 					type="checkbox"
 					id="hasBreakfast"
 					disabled={isCreating}
 					{...register("hasBreakfast")}
-				/> */}
-				<Checkbox
+				/>
+				{/* <Checkbox
 					id="hasBreakfast"
 					disabled={isCreating}
+					checked={true}
 					{...register("hasBreakfast")}
-				></Checkbox>
+				></Checkbox> */}
 			</FormRow>
 
 			<FormRow label="Cabin ID" error={errors?.cabinId?.message}>
