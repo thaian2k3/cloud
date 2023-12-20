@@ -8,8 +8,8 @@ export function useCountriesName() {
 		error,
 	} = useQuery({
 		queryKey: ["countriesName"],
-		queryFn: () => getAllCountryNames(),
-		retry: false,
+		queryFn: getAllCountryNames,
+		retry: true,
 	});
 	return { countriesName, isLoading, error };
 }
