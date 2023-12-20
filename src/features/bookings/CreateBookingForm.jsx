@@ -28,12 +28,11 @@ function CreateBookingForm({ onCloseModal }) {
 	const { isCreating, createBooking } = useCreateBooking();
 	const { createGuest } = useCreateGuest();
 	const { editGuest } = useEditGuest();
-	const { cabins, loading: loadingCabins } = useCabins();
-	const { countriesName, loading: loadingCountriesName } = useCountriesName();
+	const { cabins, isLoading: loadingCabins } = useCabins();
+	const { countriesName, isLoading: loadingCountriesName } =
+		useCountriesName();
 
 	if (loadingCabins || loadingCountriesName) return <Spinner />;
-
-	console.log(countriesName);
 
 	async function onSubmit(data) {
 		const guestData = {
@@ -74,13 +73,12 @@ function CreateBookingForm({ onCloseModal }) {
 			.select("*")
 			.eq("id", data.cabinId);
 
-
 		const numNights = subtractDates(data.endDate, data.startDate);
 		const cabinPrice =
 			numNights * (cabin[0].regularPrice - cabin[0].discount);
 		const extrasPrice = data.hasBreakfast
 			? numNights * 15 * data.numGuests
-			: 0; 
+			: 0;
 		const totalPrice = cabinPrice + extrasPrice;
 
 		let status;
